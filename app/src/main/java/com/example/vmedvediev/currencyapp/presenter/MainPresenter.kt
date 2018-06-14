@@ -39,7 +39,7 @@ class MainPresenter(private val view: View) {
     fun prepareConvertRequest(initialCurrencyCode: String?, initialValue: Editable?,
                               convertedCurrencyCode: String?) = launch(UI) {
         try {
-            if (isValidInputValue(initialValue)) {
+            if (isInputValueValid(initialValue)) {
                 view.showNoInputValueError()
             } else {
                 view.showConvertingLoading()
@@ -67,7 +67,7 @@ class MainPresenter(private val view: View) {
                     .getConvertedValue(initialCurrencyCode, convertedCurrencyCode).execute().body()
         }
 
-    private fun isValidInputValue(initialValue: Editable?) : Boolean =
+    private fun isInputValueValid(initialValue: Editable?) : Boolean =
          if (initialValue.isNullOrBlank()) {
             view.showNoInputValueError()
             true

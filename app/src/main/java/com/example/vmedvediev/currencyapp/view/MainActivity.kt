@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         Toast.makeText(this, "Currency Codes Are Downloaded!", Toast.LENGTH_SHORT).show()
 
         fromCurrencySpinner?.apply {
-            adapter = CurrencyAdapter(this@MainActivity, 0, currencies)
+            adapter = CurrencyAdapter(this@MainActivity, currencies)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
             }
         }
         toCurrencySpinner?.apply {
-            adapter = CurrencyAdapter(this@MainActivity, 0, currencies)
+            adapter = CurrencyAdapter(this@MainActivity, currencies)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
 

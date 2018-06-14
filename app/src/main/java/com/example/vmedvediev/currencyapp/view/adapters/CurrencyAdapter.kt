@@ -11,7 +11,7 @@ import com.example.vmedvediev.currencyapp.R.id.nameTextView
 import com.example.vmedvediev.currencyapp.inflate
 import com.example.vmedvediev.currencyapp.model.Currency
 
-class CurrencyAdapter(context: Context?, resource: Int, currencyList: ArrayList<Currency>) : ArrayAdapter<Currency>(context, resource, currencyList) {
+class CurrencyAdapter(context: Context?, currencyList: ArrayList<Currency>) : ArrayAdapter<Currency>(context, 0, currencyList) {
 
     private val currencies = currencyList
     private val initialContext = context
