@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CurrencyApp</string>
+    <string name="conversion_value">Conversion value</string>
+    <string name="converted_value">Converted value</string>
+    <string name="convert">Convert</string>
+    <string name="loading_currency_codes">Loading Currency Codes...</string>
+    <string name="currency_code">USD</string>
+    <string name="currency_name">United States Dollar</string>
+    <string name="currency_code_label">Code:</string>
+    <string name="currency_name_label">Name:</string>
+</resources>
