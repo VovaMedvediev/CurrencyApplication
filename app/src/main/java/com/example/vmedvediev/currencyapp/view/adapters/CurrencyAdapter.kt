@@ -14,7 +14,6 @@ import com.example.vmedvediev.currencyapp.model.Currency
 class CurrencyAdapter(context: Context?, currencyList: ArrayList<Currency>) : ArrayAdapter<Currency>(context, 0, currencyList) {
 
     private val currencies = currencyList
-    private val initialContext = context
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         return getCustomView(position, parent)
