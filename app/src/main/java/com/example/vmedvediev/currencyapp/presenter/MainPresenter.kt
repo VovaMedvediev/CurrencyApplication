@@ -36,17 +36,15 @@ class MainPresenter(private val view: View) {
         }
     }
 
-    fun makeConvertRequest(initialCurrencyCode: String?, initialValue: Editable?,
-                           convertedCurrencyCode: String?) = launch(UI) {
+    fun prepareConvertRequest(initialCurrencyCode: String?, initialValue: Editable?,
+                              convertedCurrencyCode: String?) = launch(UI) {
         try {
-            if (validateInputValue(initialValue)) {
+            if (isInputValueValid(initialValue)) {
                 view.showNoInputValueError()
             } else {
                 view.showConvertingLoading()
-                val convertedValueResponse = bg {
-                    return@bg NetworkManager.initRetrofit()
-                            .getConvertedValue(initialCurrencyCode, convertedCurrencyCode).execute().body()
-                }.await()
+
+                val convertedValueResponse = makeConvertRequest(initialCurrencyCode, convertedCurrencyCode).await()
 
                 if (convertedValueResponse?.convertedValue?.price == null) {
                     view.showConvertingError(convertedValueResponse?.error)
@@ -58,14 +56,19 @@ class MainPresenter(private val view: View) {
 
             }
         } catch (e: Exception) {
-            Log.e(TAG, "makeConvertRequest: ${e.message}")
+            Log.e(TAG, "prepareConvertRequest: ${e.message}")
             view.hideLoading()
             view.showConvertingError(e.message)
         }
     }
 
-    private fun validateInputValue(initialValue: Editable?) : Boolean =
-        if (initialValue.isNullOrBlank()) {
+    private fun makeConvertRequest(initialCurrencyCode: String?, convertedCurrencyCode: String?) = bg {
+            return@bg NetworkManager.initRetrofit()
+                    .getConvertedValue(initialCurrencyCode, convertedCurrencyCode).execute().body()
+        }
+
+    private fun isInputValueValid(initialValue: Editable?) : Boolean =
+         if (initialValue.isNullOrBlank()) {
             view.showNoInputValueError()
             true
         } else {

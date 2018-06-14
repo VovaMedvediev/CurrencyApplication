@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.vmedvediev.currencyapp.R
+import com.example.vmedvediev.currencyapp.R.id.nameTextView
+import com.example.vmedvediev.currencyapp.inflate
 import com.example.vmedvediev.currencyapp.model.Currency
 
-class CurrencyAdapter(context: Context?, resource: Int, currencyList: ArrayList<Currency>) : ArrayAdapter<Currency>(context, resource, currencyList) {
+class CurrencyAdapter(context: Context?, currencyList: ArrayList<Currency>) : ArrayAdapter<Currency>(context, 0, currencyList) {
 
     private val currencies = currencyList
-    private val initialContext = context
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         return getCustomView(position, parent)
@@ -23,9 +24,8 @@ class CurrencyAdapter(context: Context?, resource: Int, currencyList: ArrayList<
     }
 
     private fun getCustomView(position: Int, parent: ViewGroup?): View? {
-        val inflater = LayoutInflater.from(initialContext)
-        val row = inflater.inflate(R.layout.currency_item, parent, false)
-        val name =  row.findViewById<TextView>(R.id.nameTextView)
+        val row = parent?.inflate(R.layout.currency_item, false)
+        val name =  row?.findViewById<TextView>(R.id.nameTextView)
         name?.text = currencies[position].name
         return row
     }
