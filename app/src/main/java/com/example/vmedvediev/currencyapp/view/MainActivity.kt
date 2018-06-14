@@ -4,10 +4,8 @@ import android.content.DialogInterface
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.vmedvediev.currencyapp.R
 import com.example.vmedvediev.currencyapp.model.Currency
@@ -26,16 +24,12 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        presenter.makeGetCurrencyCodesRequest()
 
         convertButton.setOnClickListener {
             val convertingValue = convertingValueEditText?.text
-            presenter.makeConvertRequest(initialCurrencyCode, convertingValue, convertedCurrencyCode)
+            presenter.prepareConvertRequest(initialCurrencyCode, convertingValue, convertedCurrencyCode)
         }
-    }
-
-    override fun onPostResume() {
-        super.onPostResume()
-        presenter.makeGetCurrencyCodesRequest()
     }
 
     override fun hideLoading() {
@@ -73,7 +67,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         Toast.makeText(this, "Currency Codes Are Downloaded!", Toast.LENGTH_SHORT).show()
 
         fromCurrencySpinner?.apply {
-            adapter = CurrencyAdapter(this@MainActivity, R.id.nameTextView, currencies)
+            adapter = CurrencyAdapter(this@MainActivity, 0, currencies)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -85,7 +79,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
             }
         }
         toCurrencySpinner?.apply {
-            adapter = CurrencyAdapter(this@MainActivity, R.id.nameTextView, currencies)
+            adapter = CurrencyAdapter(this@MainActivity, 0, currencies)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
 
