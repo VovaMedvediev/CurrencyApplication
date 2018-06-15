@@ -24,11 +24,11 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        presenter.makeGetCurrencyCodesRequest()
+        presenter.onActivityStarted()
 
         convertButton.setOnClickListener {
             val convertingValue = convertingValueEditText?.text
-            presenter.prepareConvertRequest(initialCurrencyCode, convertingValue, convertedCurrencyCode)
+            presenter.prepareConvertRequest(initialCurrencyCode, convertedCurrencyCode, convertingValue)
         }
     }
 
