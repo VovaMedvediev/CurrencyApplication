@@ -7,12 +7,9 @@ import com.example.vmedvediev.currencyapp.interactor.InteractorOutput
 import com.example.vmedvediev.currencyapp.model.NetworkManager
 import com.example.vmedvediev.currencyapp.model.Currency
 import org.jetbrains.anko.coroutines.experimental.bg
+import timber.log.Timber
 
 class MainPresenter(private val view: View) : InteractorOutput {
-
-    companion object {
-        private const val TAG = "MainPresenter"
-    }
 
     private var interactor = CurrencyInteractor(this)
 
@@ -34,8 +31,7 @@ class MainPresenter(private val view: View) : InteractorOutput {
         view.hideLoading()
     }
 
-    override fun onCurrencyCodesNotAvailable(message: String?) {
-        Log.e(TAG, "makeGetCurrencyCodesRequest: $message")
+    override fun onCurrencyCodesNotAvailable() {
         view.hideLoading()
         view.showNoCurrencyCodesError()
     }

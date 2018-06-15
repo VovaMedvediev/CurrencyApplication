@@ -6,7 +6,7 @@ interface InteractorOutput {
 
     fun onCurrencyCodesLoaded(currencies: ArrayList<Currency>)
 
-    fun onCurrencyCodesNotAvailable(message: String?)
+    fun onCurrencyCodesNotAvailable()
 
     fun onConvertedValueLoaded(convertedValue: Double)
 

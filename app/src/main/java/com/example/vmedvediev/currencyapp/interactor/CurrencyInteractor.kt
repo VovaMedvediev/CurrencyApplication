@@ -4,6 +4,7 @@ import com.example.vmedvediev.currencyapp.model.ConvertedValueResponse
 import com.example.vmedvediev.currencyapp.model.CurrencyCodesProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 class CurrencyInteractor(private val output: InteractorOutput) : Interactor {
 
@@ -15,7 +16,8 @@ class CurrencyInteractor(private val output: InteractorOutput) : Interactor {
                 .subscribe({ result ->
                     output.onCurrencyCodesLoaded(result.currencies)
                 }, { error ->
-                    output.onCurrencyCodesNotAvailable(error.message)
+                    output.onCurrencyCodesNotAvailable()
+                    Timber.e(error)
                 })
     }
 
