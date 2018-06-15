@@ -16,7 +16,7 @@ class MainPresenter(private val view: View) : InteractorOutput {
 
     private var interactor = CurrencyInteractor(this)
 
-    fun onActivityStarted() {
+    fun getCurrencyCodes() {
         interactor.getCurrencyCodes()
     }
 

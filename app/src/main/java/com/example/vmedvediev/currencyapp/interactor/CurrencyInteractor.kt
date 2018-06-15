@@ -1,10 +1,11 @@
 package com.example.vmedvediev.currencyapp.interactor
 
+import com.example.vmedvediev.currencyapp.model.ConvertedValueResponse
 import com.example.vmedvediev.currencyapp.model.CurrencyCodesProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class CurrencyInteractor(var output: InteractorOutput) : Interactor {
+class CurrencyInteractor(private val output: InteractorOutput) : Interactor {
 
     override fun getCurrencyCodes() {
         val repository = CurrencyCodesProvider.provideCurrencyRepository()
@@ -24,17 +25,20 @@ class CurrencyInteractor(var output: InteractorOutput) : Interactor {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({ result ->
-                    if (result?.convertedValue?.price == null) {
-                        output.onConvertedValueNotAvailable(result.error)
-                    } else {
-                        val price = result.convertedValue.price
-                        output.onConvertedValueLoaded(convertValue(initialValue, price))
-                    }
-
+                    onConvertedValueResponse(result, initialValue)
                 }, { error ->
                     output.onConvertedValueNotAvailable(error.message)
                 })
     }
 
     private fun convertValue(initialValue: Double, price: Double): Double = initialValue.toString().toDouble() * price
+
+    private fun onConvertedValueResponse(result: ConvertedValueResponse?, initialValue: Double) {
+        if (result?.convertedValue?.price == null) {
+            output.onConvertedValueNotAvailable(result?.error)
+        } else {
+            val price = result.convertedValue.price
+            output.onConvertedValueLoaded(convertValue(initialValue, price))
+        }
+    }
 }
