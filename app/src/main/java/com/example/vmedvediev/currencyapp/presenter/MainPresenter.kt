@@ -1,13 +1,8 @@
 package com.example.vmedvediev.currencyapp.presenter
 
-import android.text.Editable
-import android.util.Log
 import com.example.vmedvediev.currencyapp.interactor.CurrencyInteractor
 import com.example.vmedvediev.currencyapp.interactor.InteractorOutput
-import com.example.vmedvediev.currencyapp.model.NetworkManager
 import com.example.vmedvediev.currencyapp.model.Currency
-import org.jetbrains.anko.coroutines.experimental.bg
-import timber.log.Timber
 
 class MainPresenter(private val view: View) : InteractorOutput {
 
@@ -17,7 +12,7 @@ class MainPresenter(private val view: View) : InteractorOutput {
         interactor.getCurrencyCodes()
     }
 
-    fun prepareConvertRequest(initialCurrencyCode: String?, convertedCurrencyCode: String?, initialValue: Editable?) {
+    fun prepareConvertRequest(initialCurrencyCode: String?, convertedCurrencyCode: String?, initialValue: String) {
         if (isInputValueValid(initialValue)) {
             view.showNoInputValueError()
         } else {
@@ -46,8 +41,8 @@ class MainPresenter(private val view: View) : InteractorOutput {
         view.showConvertingError(message)
     }
 
-    private fun isInputValueValid(initialValue: Editable?) : Boolean =
-            initialValue.isNullOrBlank()
+    private fun isInputValueValid(initialValue: String) : Boolean =
+            initialValue.isEmpty()
 
     interface View {
 

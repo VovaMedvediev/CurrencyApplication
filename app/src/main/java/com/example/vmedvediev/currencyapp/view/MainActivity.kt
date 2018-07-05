@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         presenter.getCurrencyCodes()
 
         convertButton.setOnClickListener {
-            val convertingValue = convertingValueEditText?.text
+            val convertingValue = convertingValueEditText?.text.toString()
             presenter.prepareConvertRequest(initialCurrencyCode, convertedCurrencyCode, convertingValue)
         }
     }

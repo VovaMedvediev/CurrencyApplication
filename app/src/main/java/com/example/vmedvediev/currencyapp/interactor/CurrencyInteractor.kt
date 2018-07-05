@@ -33,7 +33,7 @@ class CurrencyInteractor(private val output: InteractorOutput) : Interactor {
                 })
     }
 
-    private fun convertValue(initialValue: Double, price: Double): Double = initialValue.toString().toDouble() * price
+    private fun convertValue(initialValue: Double, price: Double): Double = initialValue * price
 
     private fun onConvertedValueResponse(result: ConvertedValueResponse?, initialValue: Double) {
         if (result?.convertedValue?.price == null) {
