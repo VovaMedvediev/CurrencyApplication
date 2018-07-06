@@ -1,81 +1,48 @@
 package com.example.vmedvediev.currencyapp.presenter
 
-import android.text.Editable
-import android.util.Log
-import com.example.vmedvediev.currencyapp.model.NetworkManager
+import com.example.vmedvediev.currencyapp.interactor.CurrencyInteractor
+import com.example.vmedvediev.currencyapp.interactor.InteractorOutput
 import com.example.vmedvediev.currencyapp.model.Currency
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import org.jetbrains.anko.coroutines.experimental.bg
 
-class MainPresenter(private val view: View) {
+class MainPresenter(private val view: View) : InteractorOutput {
 
-    companion object {
-        private const val TAG = "MainPresenter"
+    private var interactor = CurrencyInteractor(this)
+
+    fun getCurrencyCodes() {
+        interactor.getCurrencyCodes()
     }
 
-    private var currencies: ArrayList<Currency> = ArrayList()
-    private var price: Double = 0.0
-
-    fun makeGetCurrencyCodesRequest() = launch(UI) {
-        try {
-            bg {
-                val currencyCodeResponse = NetworkManager.initRetrofit()
-                        .getCurrencyCodes().execute().body()
-                currencies = currencyCodeResponse?.currencies ?: currencies
-            }.await()
-
-
-            view.showCurrencyCodes(currencies)
-            view.hideLoading()
-
-        } catch (e: Exception) {
-            Log.e(TAG, "makeGetCurrencyCodesRequest: ${e.message}")
-            view.hideLoading()
-            view.showNoCurrencyCodesError()
-        }
-    }
-
-    fun prepareConvertRequest(initialCurrencyCode: String?, initialValue: Editable?,
-                              convertedCurrencyCode: String?) = launch(UI) {
-        try {
-            if (isInputValueValid(initialValue)) {
-                view.showNoInputValueError()
-            } else {
-                view.showConvertingLoading()
-
-                val convertedValueResponse = makeConvertRequest(initialCurrencyCode, convertedCurrencyCode).await()
-
-                if (convertedValueResponse?.convertedValue?.price == null) {
-                    view.showConvertingError(convertedValueResponse?.error)
-                } else {
-                    this@MainPresenter.price = convertedValueResponse.convertedValue.price
-                }
-                view.showConvertedValue(convertValue(initialValue, this@MainPresenter.price))
-                view.hideLoading()
-
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "prepareConvertRequest: ${e.message}")
-            view.hideLoading()
-            view.showConvertingError(e.message)
-        }
-    }
-
-    private fun makeConvertRequest(initialCurrencyCode: String?, convertedCurrencyCode: String?) = bg {
-            return@bg NetworkManager.initRetrofit()
-                    .getConvertedValue(initialCurrencyCode, convertedCurrencyCode).execute().body()
-        }
-
-    private fun isInputValueValid(initialValue: Editable?) : Boolean =
-         if (initialValue.isNullOrBlank()) {
+    fun prepareConvertRequest(initialCurrencyCode: String?, convertedCurrencyCode: String?, initialValue: String) {
+        if (isInputValueValid(initialValue)) {
             view.showNoInputValueError()
-            true
         } else {
-            false
+            view.showConvertingLoading()
+            interactor.getConvertedValue(initialCurrencyCode, convertedCurrencyCode, initialValue.toString().toDouble())
         }
+    }
 
-    private fun convertValue(initialValue: Editable?, price: Double): Double = initialValue.toString().toDouble() * price
+    override fun onCurrencyCodesLoaded(currencies: ArrayList<Currency>) {
+        view.showCurrencyCodes(currencies)
+        view.hideLoading()
+    }
+
+    override fun onCurrencyCodesNotAvailable() {
+        view.hideLoading()
+        view.showNoCurrencyCodesError()
+    }
+
+    override fun onConvertedValueLoaded(convertedValue: Double) {
+        view.hideLoading()
+        view.showConvertedValue(convertedValue)
+    }
+
+    override fun onConvertedValueNotAvailable(message: String?) {
+        view.hideLoading()
+        view.showConvertingError(message)
+    }
+
+    private fun isInputValueValid(initialValue: String) : Boolean =
+            initialValue.isEmpty()
 
     interface View {
 
